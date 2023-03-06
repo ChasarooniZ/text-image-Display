@@ -1,0 +1,81 @@
+<form id="form">
+  <label for="json">JSON data:</label>
+  <textarea id="json" name="json" required></textarea>
+  <button type="submit">Submit</button>
+</form>
+
+<div id="items"></div>
+
+<script>
+const form = document.getElementById('form');
+form.addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent form submission
+  const jsonInput = document.getElementById('json');
+  const jsonData = JSON.parse(jsonInput.value);
+  const itemsContainer = document.getElementById('items');
+  for (let i = 0; i < jsonData.length; i++) {
+    const item = jsonData[i];
+    const itemElement = document.createElement('div');
+    itemElement.className = 'item';
+    const nameElement = document.createElement('h3');
+    nameElement.textContent = item.name;
+    itemElement.appendChild(nameElement);
+    const descElement = document.createElement('div');
+    descElement.innerHTML = item.desc;
+    itemElement.appendChild(descElement);
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.addEventListener('change', function(event) {
+      if (event.target.checked) {
+        nameElement.style.textDecoration = 'line-through';
+        descElement.style.textDecoration = 'line-through';
+        itemElement.classList.add('collapsed');
+      } else {
+        nameElement.style.textDecoration = 'none';
+        descElement.style.textDecoration = 'none';
+        itemElement.classList.remove('collapsed');
+      }
+    });
+    itemElement.appendChild(checkbox);
+    itemsContainer.appendChild(itemElement);
+  }
+});
+
+</script>
+
+<style>
+#items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.item {
+  width: calc(25% - 1rem * 3 / 4);
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+}
+
+.item h3 {
+  margin-top: 0;
+}
+
+.item input[type="checkbox"] {
+  margin-top: 0.5rem;
+}
+
+.item.collapsed {
+  width: calc(25% - 1rem * 3 / 4);
+  height: 3rem;
+  overflow: hidden;
+}
+
+.item.collapsed h3 {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
