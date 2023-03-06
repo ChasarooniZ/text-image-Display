@@ -17,26 +17,31 @@ form.addEventListener('submit', function(event) {
     const item = jsonData[i];
     const itemElement = document.createElement('div');
     itemElement.className = 'item';
-    const nameElement = document.createElement('h3');
-    nameElement.textContent = item.name;
-    itemElement.appendChild(nameElement);
-    const descElement = document.createElement('div');
-    descElement.innerHTML = item.desc;
-    itemElement.appendChild(descElement);
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
+    checkbox.className = 'checkbox';
     checkbox.addEventListener('change', function(event) {
+      const nameElement = event.target.parentNode.querySelector('.name');
+      const descElement = event.target.parentNode.querySelector('.desc');
       if (event.target.checked) {
+        itemElement.classList.add('checked');
         nameElement.style.textDecoration = 'line-through';
         descElement.style.textDecoration = 'line-through';
-        itemElement.classList.add('collapsed');
       } else {
+        itemElement.classList.remove('checked');
         nameElement.style.textDecoration = 'none';
         descElement.style.textDecoration = 'none';
-        itemElement.classList.remove('collapsed');
       }
     });
     itemElement.appendChild(checkbox);
+    const nameElement = document.createElement('h3');
+    nameElement.className = 'name';
+    nameElement.textContent = item.name;
+    itemElement.appendChild(nameElement);
+    const descElement = document.createElement('div');
+    descElement.className = 'desc';
+    descElement.innerHTML = item.desc;
+    itemElement.appendChild(descElement);
     itemsContainer.appendChild(itemElement);
   }
 });
@@ -45,37 +50,59 @@ form.addEventListener('submit', function(event) {
 
 <style>
 #items {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
 }
 
 .item {
-  width: calc(25% - 1rem * 3 / 4);
+  display: flex;
+  align-items: center;
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
-  box-sizing: border-box;
+}
+
+.item.checked {
+  background-color: #e0e0e0;
 }
 
 .item h3 {
-  margin-top: 0;
+  margin: 0;
+  margin-left: 0.5rem;
+  text-decoration: none;
+  color: #333;
 }
 
 .item input[type="checkbox"] {
-  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  appearance: none;
+  border: 2px solid #333;
+  border-radius: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
-.item.collapsed {
-  width: calc(25% - 1rem * 3 / 4);
-  height: 3rem;
-  overflow: hidden;
+.item input[type="checkbox"]:checked {
+  background-color: #333;
+  border-color: #333;
 }
 
-.item.collapsed h3 {
+.item input[type="checkbox"]::before {
+  content: "";
   display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin: 0.375rem;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #333;
+  transition: transform 0.3s;
+}
+
+.item input[type="checkbox"]:checked::before {
+  transform: translateX(0.75rem);
 }
 </style>
