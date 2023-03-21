@@ -17,31 +17,39 @@ form.addEventListener('submit', function(event) {
     const item = jsonData[i];
     const itemElement = document.createElement('div');
     itemElement.className = 'item';
+    const checkboxLabel = document.createElement('label');
+    checkboxLabel.className = 'checkbox-label';
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
+    checkbox.disabled = true;
     checkbox.className = 'checkbox';
-    checkbox.addEventListener('change', function(event) {
-      const nameElement = event.target.parentNode.querySelector('.name');
-      const descElement = event.target.parentNode.querySelector('.desc');
-      if (event.target.checked) {
-        itemElement.classList.add('checked');
-        nameElement.style.textDecoration = 'line-through';
-        descElement.style.textDecoration = 'line-through';
-      } else {
-        itemElement.classList.remove('checked');
-        nameElement.style.textDecoration = 'none';
-        descElement.style.textDecoration = 'none';
-      }
-    });
-    itemElement.appendChild(checkbox);
     const nameElement = document.createElement('h3');
     nameElement.className = 'name';
     nameElement.textContent = item.name;
-    itemElement.appendChild(nameElement);
     const descElement = document.createElement('div');
     descElement.className = 'desc';
     descElement.innerHTML = item.desc;
+    checkboxLabel.appendChild(checkbox);
+    checkboxLabel.appendChild(nameElement);
+    itemElement.appendChild(checkboxLabel);
     itemElement.appendChild(descElement);
+    const amtElement = document.createElement('div');
+    amtElement.className = 'amt';
+    amtElement.textContent = 'Amt: ' + item.amt;
+    itemElement.appendChild(amtElement);
+    const priceElement = document.createElement('div');
+    priceElement.className = 'price';
+    priceElement.textContent = 'Price: ' + item.price;
+    itemElement.appendChild(priceElement);
+    checkbox.addEventListener('change', function(event) {
+      if (event.target.checked) {
+        itemElement.classList.add('strike-through');
+        descElement.style.display = 'none';
+      } else {
+        itemElement.classList.remove('strike-through');
+        descElement.style.display = 'block';
+      }
+    });
     itemsContainer.appendChild(itemElement);
   }
 });
@@ -50,59 +58,58 @@ form.addEventListener('submit', function(event) {
 
 <style>
 #items {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
 .item {
-  display: flex;
-  align-items: center;
+  width: calc(25% - 1rem);
   padding: 1rem;
   border: 1px solid #ccc;
   border-radius: 0.5rem;
+  position: relative;
 }
 
-.item.checked {
-  background-color: #e0e0e0;
-}
-
-.item h3 {
-  margin: 0;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  color: #333;
-}
-
-.item input[type="checkbox"] {
-  margin-right: 0.5rem;
-  appearance: none;
-  border: 2px solid #333;
-  border-radius: 50%;
-  width: 1.5rem;
-  height: 1.5rem;
+.checkbox-label {
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s, border-color 0.3s;
 }
 
-.item input[type="checkbox"]:checked {
-  background-color: #333;
-  border-color: #333;
-}
-
-.item input[type="checkbox"]::before {
-  content: "";
-  display: block;
-  width: 0.75rem;
-  height: 0.75rem;
-  margin: 0.375rem;
+.checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin-right: 1rem;
   border-radius: 50%;
-  background-color: #fff;
-  border: 2px solid #333;
-  transition: transform 0.3s;
+  border: 2px solid #ccc;
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.item input[type="checkbox"]:checked::before {
-  transform: translateX(0.75rem);
+.checkbox:checked {
+  background-color: #2196f3;
+  border-color: #2196f3;
 }
+
+.name {
+  margin: 0;
+}
+
+.desc {
+  margin-top: 1rem;
+}
+
+.strike-through .name {
+  text-decoration: line-through;
+}
+
+.amt, .price {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+}
+
 </style>
