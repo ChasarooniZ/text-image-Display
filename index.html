@@ -20,9 +20,24 @@ form.addEventListener('submit', function(event) {
     const checkboxLabel = document.createElement('label');
     checkboxLabel.className = 'checkbox-label';
     const checkbox = document.createElement('input');
+  
     checkbox.type = 'checkbox';
     checkbox.disabled = true;
-    checkbox.className = 'checkbox';
+    checkbox.className = 'checkbox'
+    checkbox.addEventListener('change', function(event) {
+      const nameElement = event.target.parentNode.querySelector('.name');
+      const descElement = event.target.parentNode.querySelector('.desc');
+      if (event.target.checked) {
+        itemElement.classList.add('checked');
+        nameElement.style.textDecoration = 'line-through';
+        descElement.style.textDecoration = 'line-through';
+      } else {
+        itemElement.classList.remove('checked');
+        nameElement.style.textDecoration = 'none';
+        descElement.style.textDecoration = 'none';
+      }
+    });
+    itemElement.appendChild(checkbox);
     const nameElement = document.createElement('h3');
     nameElement.className = 'name';
     nameElement.textContent = item.name;
